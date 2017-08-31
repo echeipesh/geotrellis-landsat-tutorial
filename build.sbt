@@ -26,8 +26,11 @@ fork := true
 outputStrategy in run := Some(StdoutOutput)
 connectInput in run := true
 
+resolvers += "LocationTech GeoTrellis Releases" at "https://repo.locationtech.org/content/repositories/geotrellis-releases"
+
 libraryDependencies ++= Seq(
-  "org.locationtech.geotrellis" %% "geotrellis-spark" % "1.0.0",
+  "org.locationtech.geotrellis" %% "geotrellis-spark" % "1.2.0-M1",
+  "org.locationtech.geotrellis" %% "geotrellis-s3" % "1.2.0-M1",
   "org.apache.spark" %% "spark-core" % "2.1.0",
   "com.typesafe.akka" %% "akka-actor"  % "2.4.3",
   "com.typesafe.akka" %% "akka-http" % "10.0.3",

@@ -11,6 +11,7 @@ import geotrellis.spark._
 import geotrellis.spark.io._
 import geotrellis.spark.io.file._
 import geotrellis.spark.io.hadoop._
+import geotrellis.spark.io.s3._
 import geotrellis.spark.io.index._
 import geotrellis.spark.pyramid._
 import geotrellis.spark.reproject._
@@ -21,6 +22,7 @@ import geotrellis.vector._
 
 import org.apache.spark._
 import org.apache.spark.rdd._
+import org.apache.hadoop.fs.Path
 
 import scala.io.StdIn
 import java.io.File
@@ -34,6 +36,7 @@ object IngestImage {
       new SparkConf()
         .setMaster("local[*]")
         .setAppName("Spark Tiler")
+        .set("spark.default.parallelism", "128")
         .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
         .set("spark.kryo.registrator", "geotrellis.spark.io.kryo.KryoRegistrator")
 
@@ -57,7 +60,10 @@ object IngestImage {
     // an implicit class available via the
     // "import geotrellis.spark.io.hadoop._ " statement.
     val inputRdd: RDD[(ProjectedExtent, MultibandTile)] =
-      sc.hadoopMultibandGeoTiffRDD(inputPath)
+      HadoopGeoTiffRDD.spatialMultiband(new Path(inputPath))
+
+    // val inputRdd: RDD[(ProjectedExtent, MultibandTile)] =
+    //   S3GeoTiffRDD.spatialMultiband("geotrellis-test","landsat-tutorial/")
 
     // Use the "TileLayerMetadata.fromRdd" call to find the zoom
     // level that the closest match to the resolution of our source image,
@@ -88,15 +94,18 @@ object IngestImage {
 
     // Create the writer that we will use to store the tiles in the local catalog.
     val writer = FileLayerWriter(attributeStore)
+    val updater = FileLayerUpdater(outputPath)
 
     // Pyramiding up the zoom levels, write our tiles out to the local file system.
     Pyramid.upLevels(reprojected, layoutScheme, zoom, Bilinear) { (rdd, z) =>
       val layerId = LayerId("landsat", z)
       // If the layer exists already, delete it out before writing
       if(attributeStore.layerExists(layerId)) {
-        new FileLayerManager(attributeStore).delete(layerId)
+        updater.update(layerId, rdd, (_: MultibandTile) merge (_: MultibandTile))
+      } else {
+        writer.write(layerId, rdd, ZCurveKeyIndexMethod)
       }
-      writer.write(layerId, rdd, ZCurveKeyIndexMethod)
+
     }
   }
 }
