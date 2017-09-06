@@ -17,6 +17,7 @@ publishMavenStyle := true
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 
+
 shellPrompt := { s => Project.extract(s).currentProject.id + " > " }
 
 // We need to bump up the memory for some of the examples working with the landsat image.
@@ -27,7 +28,7 @@ outputStrategy in run := Some(StdoutOutput)
 connectInput in run := true
 
 libraryDependencies ++= Seq(
-  "org.locationtech.geotrellis" %% "geotrellis-spark" % "1.0.0",
+  "org.locationtech.geotrellis" %% "geotrellis-spark" % "1.1.0",
   "org.apache.spark" %% "spark-core" % "2.1.0",
   "com.typesafe.akka" %% "akka-actor"  % "2.4.3",
   "com.typesafe.akka" %% "akka-http" % "10.0.3",
