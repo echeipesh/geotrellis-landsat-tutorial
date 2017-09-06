@@ -13,5 +13,12 @@ wget http://landsat-pds.s3.amazonaws.com/L8/107/036/LC81070362015218LGN00/LC8107
 wget http://landsat-pds.s3.amazonaws.com/L8/107/036/LC81070362015218LGN00/LC81070362015218LGN00_BQA.TIF
 wget http://landsat-pds.s3.amazonaws.com/L8/107/036/LC81070362015218LGN00/LC81070362015218LGN00_MTL.txt
 
+wget http://landsat-pds.s3.amazonaws.com/L8/128/034/LC81280342015221LGN00/LC81280342015221LGN00_B3.TIF
+wget http://landsat-pds.s3.amazonaws.com/L8/128/034/LC81280342015221LGN00/LC81280342015221LGN00_B4.TIF
+wget http://landsat-pds.s3.amazonaws.com/L8/128/034/LC81280342015221LGN00/LC81280342015221LGN00_B5.TIF
+wget http://landsat-pds.s3.amazonaws.com/L8/128/034/LC81280342015221LGN00/LC81280342015221LGN00_BQA.TIF
+wget http://landsat-pds.s3.amazonaws.com/L8/128/034/LC81280342015221LGN00/LC81280342015221LGN00_MTL.txt
+
+
 # https://s3.amazonaws.com/geotrellis-sample-datasets/landsat/LC80140322014139LGN00.tar.bz
 # tar xvfj LC80140322014139LGN00.tar.bz
