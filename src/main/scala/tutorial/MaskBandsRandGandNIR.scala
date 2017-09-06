@@ -12,27 +12,27 @@ object MaskBandsRandGandNIR {
   val G_BAND = 1
   val NIR_BAND = 2
   // Path to our landsat band geotiffs.
-  def bandPath(b: String, path: String, row: String) = s"data/landsat/LC8${path}${row}2015218LGN00_${b}.TIF"
+  def bandPath(b: String, path: String, row: String, date: String) = s"data/landsat/LC8${path}${row}${date}LGN00_${b}.TIF"
 
-  def combineBands(path: String, row: String): Unit = {
+  def combineBands(path: String, row: String, date: String): Unit = {
     val maskedPath = s"data/r-g-nir-$path-$row.tif"
     println(s"Generating $maskedPath")
 
     // Read in the red band
     println("Reading in the red band...")
-    val rGeoTiff = SinglebandGeoTiff(bandPath("B4", path, row))
+    val rGeoTiff = SinglebandGeoTiff(bandPath("B4", path, row, date))
 
     // Read in the green band
     println("Reading in green band...")
-    val gGeoTiff = SinglebandGeoTiff(bandPath("B3", path, row))
+    val gGeoTiff = SinglebandGeoTiff(bandPath("B3", path, row, date))
 
     // Read in the near infrared band
     println("Reading in the NIR band...")
-    val nirGeoTiff = SinglebandGeoTiff(bandPath("B5", path, row))
+    val nirGeoTiff = SinglebandGeoTiff(bandPath("B5", path, row, date))
 
     // Read in the QA band
     println("Reading in the QA band...")
-    val qaGeoTiff = SinglebandGeoTiff(bandPath("BQA", path, row))
+    val qaGeoTiff = SinglebandGeoTiff(bandPath("BQA", path, row, date))
 
     // GeoTiffs have more information we need; just grab the Tile out of them.
     val (rTile, gTile, nirTile, qaTile) = (rGeoTiff.tile, gGeoTiff.tile, nirGeoTiff.tile, qaGeoTiff.tile)
@@ -68,7 +68,8 @@ object MaskBandsRandGandNIR {
   }
 
   def main(args: Array[String]): Unit = {
-    combineBands(path = "107",  row = "035")
-    combineBands(path = "107",  row = "036")
+    combineBands(path = "107",  row = "035", date = "2015218")
+    combineBands(path = "107",  row = "036", date = "2015218")
+    combineBands(path = "128",  row = "034", date = "2015221")
   }
 }
